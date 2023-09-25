@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8082
+
+#logging :
+#  level:
+#    d
+
+goodreads:
+  apiKey: 5xfXFYst4ekRDaQBBCncsw
+  apiSecret: kAIdYKWCOFHWHFHZqDr50S0YmpaTz4WHBUZrzs4Ez9o
+
+books:
+  total_read: 6
