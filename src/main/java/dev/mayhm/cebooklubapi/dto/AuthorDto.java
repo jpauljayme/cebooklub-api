@@ -2,12 +2,9 @@ package dev.mayhm.cebooklubapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +15,7 @@ import java.util.List;
         "ratings_count",
         "text_reviews_count"
 })
-public class Author {
+public class AuthorDto {
 
     @JsonProperty("id")
     String goodreadsId;

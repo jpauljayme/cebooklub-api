@@ -7,8 +7,10 @@ import dev.mayhm.cebooklubapi.dto.BookDto;
 import dev.mayhm.cebooklubapi.dto.GoodreadsDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
@@ -16,16 +18,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Table("tbl_book")
 public class Book {
 
     @Id
-    @Column("fld_book_id")
+//    @Column("fld_book_id")
     Integer id;
 
     @Column("fld_title")
@@ -51,7 +56,11 @@ public class Book {
 
 //    @MappedCollection
 //    List<Author> authors;
-    List<AuthorRef> authors;
+    @MappedCollection(idColumn = "book_id",
+            keyColumn = "author_id"
+    )
+    Set<AuthorRef> authors = new HashSet<>();
+
     public Book(BookDto object){
         this.title = object.getTitle();
         this.isbn = object.getIsbn();
@@ -79,7 +88,7 @@ public class Book {
         }
 
 
-        Authors authors1 = object.getAuthors();
+//        Authors authors1 = object.getAuthors();
 
 //        authors = authors1
 //                .getAuthor()
@@ -94,17 +103,38 @@ public class Book {
 
     }
 
+    public Book(String title,
+                String isbn,
+                String imageUrl,
+                String description,
+                LocalDate original_publication_date,
+                Float averageRating,
+                int numPages) {
+
+        this.title = title;
+        this.isbn = isbn;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.original_publication_date = original_publication_date;
+        this.averageRating = averageRating;
+        this.numPages = numPages;
+    }
+    /**
+     * The aggregate root should take care of whatever logic is necessary to add a course.
+     */
     public void addAuthor(Author author) {
-        authors.add(createAuthorRef(author));
+        final AuthorRef authorRef = new AuthorRef();
+        authorRef.authorId = AggregateReference.to(author.id);
+
     }
 
-    private AuthorRef createAuthorRef(Author author) {
-
-        Assert.notNull(author, "Author must not be null");
-        Assert.notNull(author.id, "Author id, must not be null");
-
-        AuthorRef authorRef = new AuthorRef();
-        authorRef.author = author.id;
-        return authorRef;
-    }
+//    private AuthorRef createAuthorRef(Author author) {
+//
+//        Assert.notNull(author, "Author must not be null");
+//        Assert.notNull(author.id, "Author id, must not be null");
+//
+//        AuthorRef authorRef = new AuthorRef();
+////        authorRef.author = author.id;
+//        return authorRef;
+//    }
 }

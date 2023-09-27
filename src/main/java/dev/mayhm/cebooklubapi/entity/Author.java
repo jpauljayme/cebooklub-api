@@ -4,16 +4,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @AllArgsConstructor
+@Table("tbl_author")
 public class Author {
 
 
+//    @Id
+//    @Column("fld_author_id")
+//    Integer id;
     @Id
-    @Column("fld_author_id")
     Integer id;
 
     @Column("fld_goodreads_id")
@@ -27,4 +31,5 @@ public class Author {
 
     @Column("fld_image_url")
     String imageUrl;
+
 }
