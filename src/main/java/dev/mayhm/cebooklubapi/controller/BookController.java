@@ -1,24 +1,14 @@
 package dev.mayhm.cebooklubapi.controller;
 
+import dev.mayhm.cebooklubapi.dto.ApiResponse;
 import dev.mayhm.cebooklubapi.dto.GoodreadsDto;
-import dev.mayhm.cebooklubapi.integration.BookClient;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import dev.mayhm.cebooklubapi.entity.Book;
 
-@RestController
-@RequestMapping("/v1/api/cebooklub")
-@CrossOrigin
-@Slf4j
-public class BookController {
+import java.util.List;
 
-    private final BookClient bookClient;
+public interface BookController {
 
-    public BookController(BookClient bookClient) {
-        this.bookClient = bookClient;
-    }
+    ApiResponse<List<Book>> findByIsbn(String isbn);
+    ApiResponse<List<Book>> findAll();
 
-    @GetMapping("/book/{isbn}")
-    public GoodreadsDto findBookByIsb(@PathVariable String isbn){
-        return bookClient.findBookByIsbn(isbn, "5xfXFYst4ekRDaQBBCncsw");
-    }
 }
