@@ -37,7 +37,11 @@ public class BooksDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        retrieveFromGoodreads();
+
+        if (bookRepository.count() == 0) {
+            retrieveFromGoodreads();
+        }
+
     }
 
     private void retrieveFromGoodreads(){
