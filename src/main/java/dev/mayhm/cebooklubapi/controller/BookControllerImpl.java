@@ -6,6 +6,7 @@ import dev.mayhm.cebooklubapi.entity.Book;
 import dev.mayhm.cebooklubapi.integration.BookClient;
 import dev.mayhm.cebooklubapi.service.BookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +24,15 @@ public class BookControllerImpl implements BookController{
 
     @GetMapping("/book/{isbn}")
     @Override
-    public ApiResponse<List<BookDto>> findByIsbn(@PathVariable String isbn){
+    public ApiResponse<List<Book>> findByIsbn(@PathVariable String isbn){
 
-        return new ApiResponse();
+        return new ApiResponse<>(HttpStatus.OK, bookService.findByIsbn(isbn));
+    }
+
+
+    @Override
+    @GetMapping("/books")
+    public ApiResponse<List<Book>> findAll() {
+        return new ApiResponse<>(HttpStatus.OK, bookService.findAllBooks());
     }
 }

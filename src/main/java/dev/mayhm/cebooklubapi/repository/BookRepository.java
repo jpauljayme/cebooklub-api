@@ -16,7 +16,7 @@ public interface BookRepository extends ListCrudRepository<Book, Integer> {
     @Cacheable("books")
     List<Book> findAll();
 
-    @Override
+
     Optional<Book> findById(Integer id);
 
     @Override
