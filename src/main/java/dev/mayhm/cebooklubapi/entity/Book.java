@@ -54,6 +54,9 @@ public class Book {
     @Column("fld_num_of_pages")
     Integer numPages;
 
+    @Column("fld_completion_date")
+    LocalDate completionDate;
+
 //    @MappedCollection
 //    List<Author> authors;
     @MappedCollection(idColumn = "book_id",

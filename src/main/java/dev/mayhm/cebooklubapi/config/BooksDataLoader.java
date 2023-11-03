@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -41,16 +43,25 @@ public class BooksDataLoader implements CommandLineRunner {
         if (bookRepository.count() == 0) {
             retrieveFromGoodreads();
         }
+//        retrieveFromGoodreads();
 
     }
 
     private void retrieveFromGoodreads(){
 
-        List<String> isbnList = Arrays.asList("0060837020",
-                "9780099458326");
+//        List<String> isbnList = Arrays.asList("0060837020",
+//                "9780099458326",
 //                "0811204812",
 //                "158799190X",
 //                "0449911438");
+
+        HashMap<String, LocalDate> isbnList = new HashMap<>();
+        isbnList.put("0060837020", LocalDate.of(2023,6,1));
+        isbnList.put("9780099458326", LocalDate.of(2023,7,1));
+        isbnList.put("0811204812", LocalDate.of(2023,8,1));
+        isbnList.put("158799190X", LocalDate.of(2023,9,1));
+        isbnList.put("0449911438", LocalDate.of(2023,10,1));
+        isbnList.put("015603008X", LocalDate.of(2023,11,1));
 
         final List<CompletableFuture<GoodreadsDto>> completableFutures =
                 new ArrayList<>();
@@ -59,14 +70,26 @@ public class BooksDataLoader implements CommandLineRunner {
          * Combine all completablefuture requests in a loop and add to
          * completableFutures.
          */
-        for(int index = 0 ; index < isbnList.size() ; index++){
 
-            final int bookIndex = index;
+
+        for (Map.Entry<String, LocalDate> entry : isbnList.entrySet()) {
+            String key = entry.getKey();
+            LocalDate value = entry.getValue();
+            System.out.println("Key: " + key + ", Value: " + value);
             CompletableFuture<GoodreadsDto> requestCompletableFuture = CompletableFuture
-                    .supplyAsync(() -> bookDbService.findBookByIsbn(isbnList.get(bookIndex)));
+                    .supplyAsync(() -> bookDbService.findBookByIsbn(key));
 
             completableFutures.add(requestCompletableFuture);
         }
+
+//        for(int index = 0 ; index < isbnList.size() ; index++){
+//
+//            final int bookIndex = index;
+//            CompletableFuture<GoodreadsDto> requestCompletableFuture = CompletableFuture
+//                    .supplyAsync(() -> bookDbService.findBookByIsbn(isbnList.get(bookIndex)));
+//
+//            completableFutures.add(requestCompletableFuture);
+//        }
 
         /**
          * Container for combined completed future results.
@@ -94,7 +117,7 @@ public class BooksDataLoader implements CommandLineRunner {
          */
         finalResults.thenAccept(result -> {
             List<Book> bookList = new ArrayList<>();
-            List<Author> authors = new ArrayList<>();
+//            List<Author> authors = new ArrayList<>();
             System.out.println("Here at result");
 
             result.forEach(goodreadsDto -> {
@@ -109,6 +132,11 @@ public class BooksDataLoader implements CommandLineRunner {
 
                 List<Author> authors1 = authorRepository.saveAll(authorList);
                 authors1.forEach(book::addAuthor);
+
+                String isbn = book.getIsbn();
+
+                LocalDate completionDate = isbnList.get(isbn);
+                book.setCompletionDate(completionDate);
                 bookList.add(book);
             });
 

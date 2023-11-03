@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS tbl_book (
     fld_description TEXT NOT NULL,
     fld_original_publication_date DATE NOT NULL,
     fld_average_rating DECIMAL NOT NULL,
-    fld_num_of_pages INTEGER NOT NULL
+    fld_num_of_pages INTEGER NOT NULL,
+    fld_completion_date DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tbl_author (

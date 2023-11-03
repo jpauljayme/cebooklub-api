@@ -11,4 +11,6 @@ public interface BookController {
     ApiResponse<List<Book>> findByIsbn(String isbn);
     ApiResponse<List<Book>> findAll();
 
+    byte[] findBookCoverByIsbn(String isbn);
+
 }
